@@ -1,0 +1,123 @@
+* {
+  font-size: 25px;
+  font-family: sans-serif;
+}
+body {
+  padding: 0;
+  margin: 0;
+}
+.layout {
+  height: 100vh;
+  display: flex;
+  min-width: 50%;
+  flex-direction: column;
+}
+header {
+  background-color:rgba(255, 111, 0, 0.55);
+  box-shadow: 1px 2px 2px 1px rgba(0, 0, 2, 0.2);   
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.control {
+  display: flex;
+  height: 100%;
+}
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+}
+.logout {
+  margin-right: 50px;
+}
+aside {
+    background-color:rgba(255, 111, 0, 0.55);
+    min-width: 25%;
+}
+main {
+  background-color: white;
+  height: 90%;
+  min-width: 50%;
+}
+footer {
+  background-color: green;
+  height: 10%;
+
+}
+
+/* bagian Content (isi) */
+.isi{
+    /* position: absolute; */
+    margin-top: 4px;
+    margin-left: 6px;
+    margin-right: 6px;
+    border-radius: 6px;
+    height: 109%;
+    background-color: rgba(204, 203, 203, 0.272);
+    display: flex;
+    flex-direction: column;
+    
+}
+.box{
+    display: flex;
+    justify-content: space-around;
+    padding: 8px;
+    /* background-color: blue; */
+}
+.info-surat{
+    background-color:white;
+    padding: 2px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+.card-arsip{
+    background-color: rgba(73, 143, 255, 0.272);
+    width: 490px;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+}
+.card-arsip-jumlah{
+    background-color: white;
+    margin-top: -14px;
+    width: 490px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+.total{
+    text-decoration: none;
+    transform: translate(-150px, -25%);
+    font-size: 15px;
+}
+.card-masuk-jumlah{
+    background-color: white;
+    margin-top: -14px;
+    width: 490px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.card-masuk{
+    background-color: rgba(59, 255, 104, 0.272);
+    width: 490px;
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+}

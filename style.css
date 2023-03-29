@@ -1,5 +1,4 @@
 * {
-  font-size: 25px;
   font-family: sans-serif;
 }
 body {
@@ -12,18 +11,75 @@ body {
   min-width: 50%;
   flex-direction: column;
 }
+
+/* Bagian Header */
 header {
-  background-color:rgba(255, 111, 0, 0.55);
-  box-shadow: 1px 2px 2px 1px rgba(0, 0, 2, 0.2);   
+  background-color: rgba(255, 111, 0, 0.55);
+  box-shadow: 1px 2px 2px 1px rgba(0, 0, 2, 0.2);
   height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.logo img {
+  margin-left: 30px;
+  width: 120px;
+}
+
+.profil img {
+  background-color: white;
+  border-radius: 100%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+}
+
+.logout {
+  border-radius: 10px;
+}
+.logout a {
+  text-decoration: none;
+  color: black;
+}
+.logout a:hover {
+  text-decoration: none;
+  color: rgb(74, 74, 74);
+}
+
+/* Bagian Kontrol */
 
 .control {
   display: flex;
   height: 100%;
+}
+
+aside {
+  display: flex;
+  justify-content: left;
+  flex-direction: column;
+  padding: 2px;
+}
+.jarak {
+  margin-top: 20px;
+}
+hr {
+  width: 90%;
+}
+
+.sidebar {
+  display: flex;
+  border-radius: 10px;
+  width: 70%;
+  margin-left: 30px;
+}
+.sidebar a {
+  text-decoration: none;
+  color: black;
+  padding: 19px;
+}
+.sidebar:hover {
+  background-color: rgba(255, 212, 179, 0.55);
+  justify-content: center;
 }
 .content {
   width: 100%;
@@ -34,90 +90,143 @@ header {
 .user {
   display: flex;
   justify-content: space-between;
-  gap: 25px;
+  gap: 5px;
+  margin-right: 100px;
 }
 .logout {
   margin-right: 50px;
 }
 aside {
-    background-color:rgba(255, 111, 0, 0.55);
-    min-width: 25%;
+  background-color: rgba(255, 111, 0, 0.55);
+  width: 330px;
 }
 main {
   background-color: white;
   height: 90%;
-  min-width: 50%;
 }
-footer {
-  background-color: green;
-  height: 10%;
-
-}
+/* Selesai Kontrol */
 
 /* bagian Content (isi) */
-.isi{
-    /* position: absolute; */
-    margin-top: 4px;
-    margin-left: 6px;
-    margin-right: 6px;
-    border-radius: 6px;
-    height: 109%;
-    background-color: rgba(204, 203, 203, 0.272);
-    display: flex;
-    flex-direction: column;
-    
+.isi {
+  margin-top: 4px;
+  margin-left: 6px;
+  margin-right: 6px;
+  max-width: 100%;
+  border-radius: 6px;
+  height: 109%;
+  background-color: rgba(204, 203, 203, 0.272);
+  display: flex;
+  flex-direction: column;
 }
-.box{
-    display: flex;
-    justify-content: space-around;
-    padding: 8px;
-    /* background-color: blue; */
+.box {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
 }
-.info-surat{
-    background-color:white;
-    padding: 2px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
+.card-arsip {
+  background-color: rgba(73, 143, 255, 0.272);
+  width: 490px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
 }
-.card-arsip{
-    background-color: rgba(73, 143, 255, 0.272);
-    width: 490px;
-    display: flex;
-    justify-content: center;
-    border-radius: 10px;
+.card-arsip-jumlah {
+  background-color: white;
+  margin-top: -14px;
+  width: 490px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
 }
-.card-arsip-jumlah{
-    background-color: white;
-    margin-top: -14px;
-    width: 490px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 10px;
+.total {
+  text-decoration: none;
+  transform: translate(-150px, -25%);
+  font-size: 15px;
 }
-.total{
-    text-decoration: none;
-    transform: translate(-150px, -25%);
-    font-size: 15px;
-}
-.card-masuk-jumlah{
-    background-color: white;
-    margin-top: -14px;
-    width: 490px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 10px;
+.card-masuk-jumlah {
+  background-color: white;
+  margin-top: -14px;
+  width: 490px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
 }
 
-.card-masuk{
-    background-color: rgba(59, 255, 104, 0.272);
-    width: 490px;
-    display: flex;
-    justify-content: center;
-    border-radius: 10px;
+.card-masuk {
+  background-color: rgba(59, 255, 104, 0.272);
+  width: 490px;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+}
+.daftar-surat {
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 4px;
+}
+.daftar-surat-box {
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 96%;
+
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 4px;
+}
+.daftar-surat-box .table {
+  max-height: 400px;
+}
+.table {
+  padding: 10px;
+  display: flex;
+  margin-top: 4px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 10px;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+  height: 200px;
+}
+.table table {
+  margin-top: -35px;
+}
+.table tr {
+  height: 25px;
+  display: flex;
+  justify-content: space-between;
+  width: 870px;
+  margin-top: 20px;
+  border-bottom: 1px solid black;
+}
+.table th {
+  font-size: 20px;
+}
+
+.tombol {
+  text-decoration: none;
+  padding: 8px;
+  color: black;
+  position: absolute;
+  margin-bottom: 10px;
+  transform: translate(-50px, -40%);
+  border-radius: 10px;
+}
+.tombol:hover{
+  background-color: rgba(168, 168, 168, 0.201);
+}
+
+.hijau{
+  background-color: rgb(116, 255, 116);
 }

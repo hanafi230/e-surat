@@ -1,6 +1,10 @@
 * {
   font-family: sans-serif;
 }
+a {
+  text-decoration: none;
+  color: black;
+}
 body {
   padding: 0;
   margin: 0;
@@ -36,10 +40,19 @@ header {
 
 .logout {
   border-radius: 10px;
+  margin-top: 90px;
+  /* margin-left: -10px; */
+  /* background-color: grey; */
+}
+.logout:hover{
+  transform: translate(10px,-10%);
+
 }
 .logout a {
   text-decoration: none;
   color: black;
+  /* background-color: blue; */
+  padding: 18px;
 }
 .logout a:hover {
   text-decoration: none;
@@ -92,9 +105,6 @@ hr {
   justify-content: space-between;
   gap: 5px;
   margin-right: 100px;
-}
-.logout {
-  margin-right: 50px;
 }
 aside {
   background-color: rgba(255, 111, 0, 0.55);
@@ -199,11 +209,33 @@ main {
   overflow-y: scroll;
   height: 200px;
 }
+.table-masuk {
+  padding: 10px;
+  display: flex;
+  margin-top: 4px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 10px;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+  height: 400px;
+}
 .table table {
   margin-top: -35px;
 }
+.arsip {
+  max-height: 400px;
+}
 .table tr {
-  height: 25px;
+  height: 35px;
+  display: flex;
+  justify-content: space-between;
+  width: 870px;
+  margin-top: 20px;
+  border-bottom: 1px solid black;
+}
+.table-masuk tr {
+  height: 35px;
   display: flex;
   justify-content: space-between;
   width: 870px;
@@ -213,20 +245,151 @@ main {
 .table th {
   font-size: 20px;
 }
+.table-masuk th {
+  font-size: 20px;
+}
 
 .tombol {
   text-decoration: none;
   padding: 8px;
   color: black;
-  position: absolute;
-  margin-bottom: 10px;
-  transform: translate(-50px, -40%);
+  /* margin-bottom: 20px; */
   border-radius: 10px;
 }
-.tombol:hover{
+.tombol:hover {
   background-color: rgba(168, 168, 168, 0.201);
 }
-
-.hijau{
+.lihat {
+  transform: translate(-112px, -40%);
+}
+.hijau {
   background-color: rgb(116, 255, 116);
 }
+
+.merah {
+  background-color: rgb(255, 127, 127);
+}
+
+.foto-profil img {
+  width: 300px;
+  height: 330px;
+  background-color: rgba(227, 227, 227, 0.596);
+  padding: 10px;
+  border-radius: 10px;
+}
+.keterangan-profil {
+  background-color: rgba(227, 227, 227, 0.596);
+  width: 60%;
+  padding: 10px;
+  border-radius: 10px;
+}
+.box-profil {
+  margin-top: -15px;
+  margin-left: -10px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  /* background-color: blue; */
+  padding: 10px;
+}
+.input-data {
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+  gap: 6px;
+}
+.input-data input {
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+}
+
+.tombol-simpan {
+  text-decoration: none;
+  padding: 8px;
+  color: black;
+  border-radius: 10px;
+  background-color: rgba(227, 227, 227, 0.596);
+}
+.tombol-simpan:hover {
+  background-color: rgba(130, 130, 130, 0.596);
+}
+.tombol-simpan a {
+  padding: 8px;
+}
+.tombol-simpan a:hover {
+  color: white;
+}
+.jk {
+  margin-bottom: 10px;
+}
+
+.box-lihat{
+  display: flex;
+ flex-direction: column; 
+ justify-content: space-around;
+  background-color: rgba(190, 190, 190, 0.244);
+  height: 100vh;
+  max-width: 70%;
+  border-radius: 15px;
+
+  /* margin-top: 30px; */
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.text-lihat{
+  background-color: rgb(226, 226, 226);
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  width: 94%;
+
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  align-items: center;
+}
+
+.ukuran{
+  margin-top: 20px;
+  margin-left: 40px;
+  font-size: 20px;
+  gap: 10px;
+}
+
+.input-data-detail {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  gap: 10px;
+}
+.input-data-detail input {
+  height: 30px;
+  width: 70%;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: rgba(190, 190, 190, 0);
+  font-size: 20px;
+
+}
+.garis{
+  width: 90%;
+}
+.tombol-bagian-lihat{
+  margin-left: 50px;
+  display: flex;
+  justify-content: center;
+  width: 10%;
+  border-radius: 10px;
+  
+}
+.tombol-bagian-lihat a{
+  padding: 8px;
+  }
+
+
+  

@@ -289,20 +289,26 @@ main {
   width: 90%;
   display: flex;
   justify-content: space-between;
-  /* background-color: blue; */
   padding: 10px;
 }
-.input-data {
+
+.input{
+  width: 90%;
+  height: 60px;
   display: flex;
   flex-direction: column;
-  font-size: 15px;
-  gap: 6px;
+  align-items: left;
+  gap: 1px;
+  padding: 10px;
+  
 }
-.input-data input {
-  height: 30px;
+
+input{
+  height: 50px;
   border: none;
-  border-radius: 10px;
+  border-bottom: 1px solid black;
   outline: none;
+
 }
 
 .tombol-simpan {
@@ -390,6 +396,11 @@ main {
 .tombol-bagian-lihat a{
   padding: 8px;
   }
-
-
+.tombol-kirim{
+  background-color: blue;
+  padding: 10px;
+  border-radius: 10px;
+  align-items: left;
+  width: 40px;
+}
   

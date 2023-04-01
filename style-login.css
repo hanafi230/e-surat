@@ -48,7 +48,7 @@ label{
  .tombol-login button:hover{
     background-color: grey;
  }
- .footer{
+ .footer-login{
     margin-top: 50px;
     margin-left: -200px;
     font-size: small;

@@ -397,10 +397,18 @@ input{
   padding: 8px;
   }
 .tombol-kirim{
-  background-color: blue;
-  padding: 10px;
+  padding: 4px;
   border-radius: 10px;
   align-items: left;
+  display: flex;
+  justify-content: center;
   width: 40px;
+}
+.tombol-kirim a{
+  padding: 8px;
+  border-radius: 10px;
+}
+.tombol-kirim a:hover{
+  background-color: rgba(116, 255, 116, 0.178);
 }
   

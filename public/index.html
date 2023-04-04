@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../assets/style.css" />
-    <title>Arsip Surat</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+    <title>Home</title>
   </head>
   <body>
     <div class="layout">
@@ -20,7 +20,7 @@
             <img src="../gambar/propil.jpg" alt="" />
           </div>
           <div class="pengguna">
-            <h3>Hanafi</h3>
+            <h3 id="nama"></h3>
           </div>
         </div>
       </header>
@@ -65,23 +65,34 @@
         <div class="content">
           <main>
             <div class="isi">
-              <div class="daftar-surat-box">
-                <h1>Arsip Surat</h1>
-                <div class="table-masuk">
+              <div class="box">
+                <div class="card-arsip">
+                  <h3>Arsip Surat</h3>
+                </div>
+                <div class="card-masuk">
+                  <h3>Surat Masuk</h3>
+                </div>
+              </div>
+              <div class="box">
+                <div class="card-arsip-jumlah">
+                  <h1 id="arsip-total"></h1>
+                  <a href="../arsip" class="total">Lihat Detail >></a>
+                </div>
+
+                <div class="card-masuk-jumlah">
+                  <h2 id="total" name=""></h2>
+                  <a href=""></a>
+                  <a href="../surat-masuk" class="total">Lihat Detail >></a>
+                </div>
+              </div>
+              <div class="daftar-surat">
+                <h1>Daftar Surat Belum Dibaca</h1>
+                <div class="table">
                   <table>
                     <th>No</th>
                     <th>Pengirim</th>
                     <th>Tanggal Masuk</th>
-                    <th>Aksi</th>
-                    <!-- <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>
-                        <a href="" class="tombol hijau lihat">Lihat</a>
-                        <a href="" class="tombol merah hapus">Hapus</a>
-                      </td>
-                    </tr> -->
+                    <th>Catatan</th>
                   </table>
                 </div>
               </div>
@@ -91,49 +102,55 @@
       </div>
     </div>
     <script>
+      
+
       fetch("/api/me").then((res) => res.json());
-      async function suratMasuk() {
-        const tabel = document.querySelector("table");
+
+      async function total() {
         const res = await fetch("/api/arsip");
         const data = await res.json();
+        const total = data.length;
+        const jumlahTotalSurat = document.createElement("arsip");
+        jumlahTotalSurat.textContent = total;
+        const cetak = document.querySelector("h1");
+        cetak.appendChild(jumlahTotalSurat);
+      }
+      total();
+
+      async function jumlahSurat() {
+        const res = await fetch("/api/surat-masuk");
+        const data = await res.json();
+        const jumlahTotal = data.length;
+        const TotalSurat = document.createElement("total");
+        TotalSurat.textContent = jumlahTotal;
+        const cetak = document.querySelector("h2");
+        cetak.appendChild(TotalSurat);
+      }
+      jumlahSurat();
+    
+      async function suratMasuk() {
+        const tabel = document.querySelector("table");
+        const res = await fetch("/api/surat-masuk");
+        const data = await res.json();
+
+        
+
         data.forEach((e, i) => {
           const tr = document.createElement("tr");
           const no = document.createElement("td");
           no.textContent = i + 1;
-
+          
           const nama = document.createElement("td");
           nama.textContent = e.pengirim;
-
           const tanggal = document.createElement("td");
           tanggal.textContent = e.tanggal_kirim;
-
-          const lihat = document.createElement("td");
-          const anchorEdit = document.createElement("a");
-          anchorEdit.textContent = "Lihat";
-          anchorEdit.href = `../lihat?id=${data[i].id}`;
-          lihat.appendChild(anchorEdit);
-
-          const tdDelete = document.createElement("td");
-          const buttonDelete = document.createElement("button");
-          buttonDelete.textContent = "Hapus";
-          buttonDelete.onclick = () => {
-            if (confirm(`Apakah Anda yakin ingin menghapus ${data[i].pengirim}?`)) {
-              fetch(`/api/hapus/${data[i].id}`, {
-                method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-              });
-              location.reload();
-            }
-          };
-          tdDelete.appendChild(buttonDelete);
+          const catatan = document.createElement("td");
+          catatan.textContent = e.catatan;
 
           tr.appendChild(no);
           tr.appendChild(nama);
           tr.appendChild(tanggal);
-          tr.appendChild(lihat);
-          tr.appendChild(tdDelete);
+          tr.appendChild(catatan);
           tabel.appendChild(tr);
         });
       }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/style.css" />
     <title>Profil</title>
   </head>
   <body>
@@ -12,7 +12,7 @@
       <header>
         <div class="logo">
           <h3>
-            <a href="../layouts/index.html"
+            <a href="/"
               ><img src="../gambar/Logo.png" alt=""
             /></a>
           </h3>
@@ -31,7 +31,7 @@
           <div class="jarak">
             <div class="sidebar">
               <h3>
-                <a href="../home/index.html"
+                <a href="/"
                   >Home
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
                 >
@@ -39,16 +39,16 @@
             </div>
             <hr />
             <div class="sidebar">
-              <h3><a href="../surat-masuk/index.html">Surat Masuk</a></h3>
+              <h3><a href="../surat-masuk">Surat Masuk</a></h3>
             </div>
             <hr />
             <div class="sidebar">
-              <h3><a href="../arsip/index.html">Arsip Surat &nbsp;</a></h3>
+              <h3><a href="../arsip">Arsip Surat &nbsp;</a></h3>
             </div>
             <hr />
             <div class="sidebar">
               <h3>
-                <a href="../profil/index.html"
+                <a href="../profil"
                   >Profile
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
                 >
@@ -57,7 +57,7 @@
             <hr />
           </div>
           <div class="logout">
-            <h3><a href="../login/index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
+            <h3><a href="../login">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
           </div>
         </aside>
         <div class="content">
@@ -76,18 +76,20 @@
                         </div>
                     </div>
                     <div class="keterangan-profil">
-                        <div class="input-data">
-                            Nama Pengguna <input type="text">  
+                        <form action="" name="form">
+                          <div class="input-data">
+                            Nama Pengguna <input type="text" name="nama" id="nama">
                             <div class="jk">
                             Jenis Kelamin 
                             <input type="radio" name="jenis_kelamin" value="Laki-Laki">Laki-Laki
                             <input type="radio" name="jenis_kelamin" value="Perempuan">Perempuan
                             </div>
-                            Alamat <input type="text">  
-                            Nomor Telepon <input type="text">  
-                            Email <input type="text">
+                            Alamat <input type="text" id="alamat">  
+                            Nomor Telepon <input type="text" id="notel">  
+                            Email <input type="text" id="email">
                             Ubah Foto Profil <input type="file">
-                        </div>
+                          </div>
+                        </form>
                     </div>
                 </div>
               </div>
@@ -96,5 +98,19 @@
         </div>
       </div>
     </div>
+      <script>
+        async function profil() {
+        const tabel = document.querySelector("form");
+        const res = await fetch("/api/me");
+        const data = await res.json();
+
+        const nama = document.getElementById("nama");
+        nama.textContent = data.nama;
+        const cetak = document.querySelector("input");
+        cetak.appendChild(nama);
+      
+      }
+      profil();
+      </script>
   </body>
 </html>

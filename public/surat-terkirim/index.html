@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../assets/style.css" />
     <title>Surat Terkirim</title>
   </head>
   <body>
     <div class="layout">
       <header>
         <div class="logo">
-            <h3><a href="../layouts/index.html"><img src="../gambar/Logo.png" alt="" /></a></h3>
+            <h3><a href="/"><img src="../gambar/Logo.png" alt="" /></a></h3>
         </div>
         <div class="user">
           <div class="profil">
@@ -62,55 +62,8 @@
                     <th>No</th>
                     <th>Pengirim</th>
                     <th>Tanggal Masuk</th> 
-                    <th>Catatan</th>                 
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Silahkan Dibaca</td>
-                    </tr>                                                                                                                               
+                    <th>Status</th> 
+
                   </table>
                 </div>
               </div>
@@ -119,5 +72,32 @@
         </div>
       </div>
     </div>
+    <script>
+      fetch("/api/me").then((res) => res.json());
+      async function suratMasuk(){
+        const tabel = document.querySelector("table");
+        const res = await fetch("/api/data");
+        const data = await res.json();   
+        data.forEach((e,i) => {
+          const tr = document.createElement("tr");
+          const no = document.createElement("td");
+          no.textContent = i+1;
+          const nama = document.createElement("td");
+          nama.textContent = e.pengirim;
+          const tanggal = document.createElement("td");
+          tanggal.textContent = e.tanggal_kirim;
+          const status = document.createElement("td");
+          status.textContent = e.keterangan;
+
+          tr.appendChild(no);
+          tr.appendChild(nama);
+          tr.appendChild(tanggal);
+          tr.appendChild(status);
+          tabel.appendChild(tr);
+
+        });
+      }
+      suratMasuk();
+    </script>
   </body>
 </html>

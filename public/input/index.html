@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../style-input.css" />
+    <link rel="stylesheet" href="../assets/style-input.css" />
     <title>Input Surat</title>
   </head>
   <body>
@@ -59,30 +59,57 @@
         <div class="content">
           <main>
             <div class="isi">
+             <form action="" name="form">
               <div class="daftar-surat-box">
                 <h1>Input Surat Baru</h1>  
                 <hr>
                 <div class="input">
-                  Nama Pengirim<input type="text">
+                  Nama Pengirim<input type="text" name="pengirim" required>
                 </div>
                 <div class="input">
-                  Tanggal kirim<input type="date">
+                  Tanggal kirim<input type="date" name="tanggal_kirim" required>
                 </div>
                 <div class="input">
-                  Catatan <input type="text">
+                  Catatan <input type="text" name="catatan" required>
                 </div>
                 <div class="input">
                   Surat <input type="file">
                 </div>
+                <div class="input">
+                  <input type="hidden" name="status" value="2">
+                </div>
                 <div class="tombol-kirim">
-                  <a href="" class="hijau">Kirim</a>
+                  <button>Kirim</button>
                 </div>
               </div>
-             
+             </form>             
             </div>
           </main>
         </div>
       </div>
     </div>
+    <script>
+      document.form.onsubmit = (e) => {
+        e.preventDefault();
+        const pengirim = document.form.pengirim.value;
+        const tanggal_kirim = document.form.tanggal_kirim.value;
+        const catatan = document.form.catatan.value;
+        const status = document.form.status.value;
+        fetch("/api/input", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            pengirim,
+            tanggal_kirim,
+            catatan,
+            status
+          }),
+        });
+        alert("Berhasil Ditambahkan");
+        location.href = "../input";
+      };
+    </script>
   </body>
 </html>

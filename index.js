@@ -10,7 +10,7 @@ import bcrypt from "bcryptjs";
 import multer from "multer";
 const upload = multer({ dest: "public/photos" });
 
-const type = upload.single('file')
+const type = upload.single("file");
 const app = express();
 
 // middleware untuk membaca body berformat JSON
@@ -21,9 +21,13 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
+const salt = await bcrypt.genSalt();
+const hash = await bcrypt.hash("1234", salt);
 import path from "path";
+import { count } from "console";
+console.log(hash);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
-app.use(express.static(path.resolve(__dirname, "public")));
+app.use(express.static(path.resolve(__dirname, "public")));
 
 app.use(cookieParser());
 
@@ -57,9 +61,9 @@ app.use((req, res, next) => {
         } else {
           res.redirect("/login");
         }
-      }
-    }
-  }
+      }
+    }
+  }
 });
 
 app.use(express.static("public"));
@@ -86,11 +90,64 @@ app.post("/api/login", async (req, res) => {
 
 // dapatkan username yang login
 app.get("/api/me", async (req, res) => {
-  const result = await client.query(`select * from pengguna where id = ${req.me.id}`);
-  req.me = result.rows[0];
+  const result = await client.query(
+    `select * from pengguna where id = ${req.me.id}`
+  );
+  req.me = result.rows;
   res.json(req.me);
 });
 
+//Surat Masuk
+app.get("/api/surat-masuk", async (req, res) => {
+  const results = await client.query(
+    `select * from arsip_surat where status = 2`
+  );
+  // console.log(results.rows);
+  const jumlahSurat = count(results);
+  res.json(results.rows);
+});
+// Arsip
+app.get("/api/arsip", async (req, res) => {
+  const results = await client.query(
+    `select * from arsip_surat where status = 1`
+  );
+  const jumlahSurat = count(results);
+  res.json(results.rows);
+});
+
+//tampilkan satu
+app.get("/api/lihat/:id", async (req, res) => {
+  const results = await client.query(
+    `SELECT * FROM arsip_surat WHERE id = '${req.params.id}'`
+  );
+  res.json(results.rows[0]);
+});
+
+// Tampil Seluruh Data
+app.get("/api/data", async (req, res) => {
+  const results = await client.query(`SELECT *
+    FROM arsip_surat
+    right Join status_surat
+    ON arsip_surat.status = status_surat.id`);
+  // console.log(results.rows);
+  const jumlahSurat = count(results);
+  res.json(results.rows);
+});
+
+// Input Data
+app.post("/api/input", async (req, res) => {
+  await client.query(
+    `INSERT INTO arsip_surat (pengirim, tanggal_kirim, catatan,status) VALUES ('${req.body.pengirim}','${req.body.tanggal_kirim}','${req.body.catatan}','${req.body.status}')`
+  );
+  res.send("Mahasiswa berhasil ditambahkan.");
+});
+
+// Hapus Data
+app.delete("/api/hapus/:id", async (req, res) => {
+  await client.query(`DELETE FROM arsip_surat WHERE id = '${req.params.id}'`);
+  res.send("Mahasiswa berhasil dihapus.");
+});
+
 app.listen(3000, () => {
-    console.log("Server berhasil berjalan.");
-  });
+  console.log("Server berhasil berjalan.");
+});

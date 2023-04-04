@@ -1,38 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/style-input.css" />
     <title>Lihat</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="box-lihat">
-        <div class="text-lihat">
-            <h1>Detail</h1>
-        </div>
+      <div class="text-lihat">
+        <h1>Detail</h1>
+      </div>
+      <form action="" name="form">
         <div class="data">
-            <div class="input-data-detail ukuran">
-                Nama Pengirim: <input type="text" readonly value="hanafi">
-            </div>
-            <hr class="garis">
-            <div class="input-data-detail ukuran">
-                Tanggal Kirim: <input type="text" readonly value="23 April 2023">
-            </div>
-            <hr class="garis">
-            <div class="input-data-detail ukuran">
-                Catatan: <input type="text" readonly value="Segera Dibaca">
-            </div>
-            <hr>
-            <div class="input-data-detail ukuran">
-                Folder Surat: <input type="text" readonly value="Segera Dibaca">
-            </div>
-            <hr class="garis">            
+          <div class="input-data-detail ukuran">
+            Nama Pengirim: <input type="text" readonly name="pengirim" />
+          </div>
+          <hr class="garis" />
+          <div class="input-data-detail ukuran">
+            Tanggal Kirim: <input type="text" readonly name="tanggal_kirim" />
+          </div>
+          <hr class="garis" />
+          <div class="input-data-detail ukuran">
+            Catatan: <input type="text" readonly name="catatan" />
+            <input type="text" hidden name="status" value="1" />
+          </div>
+          <hr/>
+          <div class="input-data-detail ukuran">
+            Folder Surat: <input type="text" readonly />
+          </div>
+          <hr class="garis" />
         </div>
-        <div class="tombol-bagian-lihat hijau">
-            <a href="../surat-masuk/index.html"> Kembali</a>
-        </div>
+      </form>
+      <div class="tombol-bagian-lihat hijau">
+        <a href="../surat-masuk/index.html"> Kembali</a>
+      </div>
     </div>
-</body>
+
+    <script>
+      const searchParams = new URLSearchParams(location.search);
+
+      fetch(`/api/lihat/${searchParams.get("id")}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.form.pengirim.value = data.pengirim;
+          document.form.tanggal_kirim.value = data.tanggal_kirim;
+          document.form.catatan.value = data.catatan;
+          
+        });
+
+      document.querySelector("button").onclick = async (e) => {
+        e.preventDefault();
+        const pengirim = document.form.pengirim.value;
+        const tanggal_kirim = document.form.tanggal_kirim.value;
+        const catatan = document.form.catatan.value;
+        
+        await fetch(`/api/lihat/${searchParams.get("id")}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            pengirim,
+            tanggal_kirim,
+            catatan,
+           
+          }),
+        });
+        location.href = "../arsip";
+      };
+    </script>
+  </body>
 </html>

@@ -70,7 +70,7 @@
                 <hr />
                 <div class="box-profil">
                   <div class="foto-tombol">
-                    <div class="foto-profil" id="profil">
+                    <div class="foto-profil" >
                       <img src="" alt="" />
                     </div>
                     <!-- <div class="tombol-simpan">
@@ -78,26 +78,28 @@
                         </div> -->
                   </div>
                   <div class="keterangan-profil">
-                    <form action="" name="form">
+                    <form action="post" name="form">
                       <div class="input-data">
-                        Nama Pengguna <input type="text" name="nama" />
+                        Nama Pengguna <input type="text" name="nama" required />
                         <div class="jk">
                           Jenis Kelamin
                           <input
                             type="radio"
                             name="jenis_kelamin"
                             value="Laki-Laki"
+                            required
                           />Laki-Laki
                           <input
                             type="radio"
                             name="jenis_kelamin"
                             value="Perempuan"
+                            required
                           />Perempuan
                         </div>
-                        Alamat <input type="text" name="alamat" /> Nomor Telepon
-                        <input type="text" name="nomor_telepon" /> Email
-                        <input type="email" id="email" name="email" /> Ubah Foto
-                        Profil <input type="file" name="foto" />
+                        Alamat <input type="text" name="alamat" required/> Nomor Telepon
+                        <input type="number" name="nomor_telepon" maxlength="13" required/> Email
+                        <input type="email" id="email" name="email" required/> Ubah Foto
+                        Profil <input type="file" name="profil" />
                         <button>Simpan</button>
                       </div>
                     </form>
@@ -115,42 +117,37 @@
       fetch(`/api/me`)
         .then((response) => response.json())
         .then((data) => {
-          
           document.querySelector(".pengguna>h3").textContent = data[0].nama;
           document.form.nama.value = data[0].nama;
           document.form.jenis_kelamin.value = data[0].jenis_kelamin;
           document.form.alamat.value = data[0].alamat;
           document.form.nomor_telepon.value = data[0].nomor_telepon;
+          document.form.jenis_kelamin.value = data[0].jenis_kelamin;
           document.form.email.value = data[0].email;
-          document.querySelector(".profil>img").src = `/photos/${data.profil}`;
-
+          document.querySelector(".profil>img").src = `/photos/${data[0].profil}`;
+          document.querySelector(".foto-profil>img").src = `/photos/${data[0].profil}`;
         });
 
-        document.querySelector("button").onclick = async (e) => {
-            e.preventDefault();
-            const nama = document.form.nama.value;
-            const jenis_kelamin = document.form.jenis_kelamin.value;
-            const alamat = document.form.alamat.value;
-            const nomor_telepon = document.form.nomor_telepon.value;
-            const email = document.form.email.value;
+      document.querySelector("button").onclick = async (e) => {
+        e.preventDefault();
+        const isi = new FormData();
+        isi.append("nama", document.form.nama.value);
+        isi.append("alamat", document.form.alamat.value);
+        isi.append("nomor_telepon", document.form.nomor_telepon.value);
+        isi.append("jenis_kelamin", document.form.jenis_kelamin.value);
+        isi.append("email", document.form.email.value);
+        isi.append("profil", document.form.profil.files[0]);
 
-            await fetch(`/api/ubah`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              body: JSON.stringify({
-                nama,
-                jenis_kelamin,
-                alamat,
-                nomor_telepon,
-                email,
-              }),
-            });
-            alert("berhasil diubah");
-            location.href = "../profil";
-          };
+        await fetch(`/api/ubah`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: isi,
+        });
+        alert("berhasil diubah");
+        location.href = "../profil";
+      };
     </script>
   </body>
 </html>

@@ -14,9 +14,6 @@ const app = express();
 
 // middleware untuk membaca body berformat JSON
 app.use(express.json());
-// middleware untuk mengelola cookie
-
-// Untuk mengakses file statis (khusus Vercel)//////////////////////////////////////////////////////////////////
 
 app.use(express.static("public"));
 
@@ -24,6 +21,7 @@ const salt = await bcrypt.genSalt();
 const hash = await bcrypt.hash("1234", salt);
 import path from "path";
 import { count } from "console";
+import { unlink } from "fs/promises";
 // console.log(hash);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.resolve(__dirname, "public")));
@@ -96,14 +94,11 @@ app.get("/api/me", async (req, res) => {
   res.json(req.me);
 });
 
-
-
 //Surat Masuk //////////////////////////////////////////////////////////////////
 app.get("/api/surat-masuk", async (req, res) => {
   const results = await client.query(
     `select * from arsip_surat where status = 2`
   );
-  // console.log(results.rows);
   const jumlahSurat = count(results);
   res.json(results.rows);
 });
@@ -138,15 +133,20 @@ app.put("/api/lihat/:id", async (req, res) => {
   await client.query(
     `UPDATE arsip_surat SET pengirim = '${req.body.pengirim}', tanggal_kirim = '${req.body.tanggal_kirim}', catatan = '${req.body.catatan}', status = '${req.body.status}' WHERE id = ${req.params.id}`
   );
-  res.send("Mahasiswa berhasil diedit.");
+  res.send("Data berhasil diedit.");
 });
 
-app.put("/api/ubah", async (req, res) => {
-  // console.log(req.me);
-  const result = await client.query(
-    `UPDATE pengguna SET nama = '${req.body.nama}', jenis_kelamin = '${req.body.jenis_kelamin}', alamat = '${req.body.alamat}', nomor_telepon = '${req.body.nomor_telepon}', email = '${req.body.email}' WHERE id = ${req.me.id}`
+app.put("/api/ubah", upload.single("profil"), async (req, res) => {
+  if (req.file) {
+    const result = await client.query(
+      `SELECT profil FROM pengguna WHERE id = ${req.me.id}`
+    );
+    await unlink(`./public/photos/${result.rows[0].profil}`)
+  }
+  await client.query(
+    `UPDATE pengguna SET nama = '${req.body.nama}', jenis_kelamin = '${req.body.jenis_kelamin}', alamat = '${req.body.alamat}', nomor_telepon = '${req.body.nomor_telepon}', email = '${req.body.email}'${req.file ? `, profil = '${req.file.filename}'` : ""} WHERE id = ${req.me.id}`
   );
-  res.send("Berhasil  diedit.");
+  res.send("Berhasil diedit.");
 });
 
 // Tampil Seluruh Data //////////////////////////////////////////////////////////////////
@@ -155,14 +155,12 @@ app.get("/api/data", async (req, res) => {
     FROM arsip_surat
     right Join status_surat
     ON arsip_surat.status = status_surat.id`);
-  // console.log(results.rows); //////////////////////////////////////////////////////////////////
   const jumlahSurat = count(results);
   res.json(results.rows);
 });
 
 // Input Data //////////////////////////////////////////////////////////////////
-app.post("/api/input", upload.single("surat"),async (req, res) => {
-  // console.log(req.body);
+app.post("/api/input", upload.single("surat"), async (req, res) => {
   await client.query(
     `INSERT INTO arsip_surat (pengirim, tanggal_kirim, catatan,status,surat) VALUES ('${req.body.pengirim}','${req.body.tanggal_kirim}','${req.body.catatan}',${req.body.status},'${req.file.filename}')`
   );
@@ -170,19 +168,20 @@ app.post("/api/input", upload.single("surat"),async (req, res) => {
 });
 
 // Hapus Data //////////////////////////////////////////////////////////////////
-app.delete("/api/hapus/:id", async (req, res) => {
+app.delete("/api/hapus/:id", upload.single("surat"), async (req, res) => {
+  const results = await client.query(
+    `SELECT * FROM arsip_surat WHERE id = '${req.params.id}'`
+  );
+  await unlink(`./public/photos/${results.rows[0].surat}`);
+  
+
   await client.query(`DELETE FROM arsip_surat WHERE id = '${req.params.id}'`);
+  
   res.send("Mahasiswa berhasil dihapus.");
 });
+ 
+
 
 app.listen(3000, () => {
   console.log("Server berhasil berjalan.");
 });
-
-
-// app.put("/api/ubah", upload.single("surat"), async (req, res) => {
-//   const result = await client.query(
-//     `UPDATE pengguna SET nama = '${req.body.nama}', jenis_kelamin = '${req.body.jenis_kelamin}', alamat = '${req.body.alamat}', nomor_telepon = '${req.body.nomor_telepon}', email = '${req.body.email}', profil = '${req.profil.filename}',  WHERE id = ${req.me.id}`
-//   );
-//   res.send("Berhasil  diedit.");
-// });

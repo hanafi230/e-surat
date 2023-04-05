@@ -50,7 +50,6 @@
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           document.form.pengirim.value = data.pengirim;
           document.form.tanggal_kirim.value = data.tanggal_kirim;
           document.form.catatan.value = data.catatan;
@@ -64,8 +63,6 @@
         const tanggal_kirim = document.form.tanggal_kirim.value;
         const catatan = document.form.catatan.value;
         const status = document.form.status.value;
-        const profil = document.form.profil.value;
-
         await fetch(`/api/lihat/${searchParams.get("id")}`, {
           method: "PUT",
           headers: {
@@ -77,7 +74,6 @@
             tanggal_kirim,
             catatan,
             status,
-            profil,
           })
         });
         alert("Ditambahkan Ke Arsip");

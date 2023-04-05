@@ -19,7 +19,7 @@
         </div>
         <div class="user">
           <div class="profil">
-            <img src="../gambar/propil.jpg" alt="" />
+            <img src="" alt="" />
           </div>
           <div class="pengguna">
             <h3>Hanafi</h3>
@@ -67,13 +67,13 @@
                   Nama Pengirim<input type="text" name="pengirim" required>
                 </div>
                 <div class="input">
-                  Tanggal kirim<input type="date" name="tanggal_kirim" required>
+                  Tanggal kirim<input type="text" name="tanggal_kirim" readonly id="tanggal" >
                 </div>
                 <div class="input">
                   Catatan <input type="text" name="catatan" required>
                 </div>
                 <div class="input">
-                  Surat <input type="file" name="surat"> 
+                  Surat <input type="file" name="surat" required> 
                 </div>
                 <div class="input">
                   <input type="hidden" name="status" value="2">
@@ -92,8 +92,13 @@
        fetch(`/api/me`)
         .then((response) => response.json())
         .then((data) => {
+          const tanggal = new Date();
+          const lengkap = tanggal.getDate()+'/'+(tanggal.getMonth()+1)+'/'+tanggal.getFullYear();
           document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.querySelector(".profil>img").src = `/photos/${data[0].profil}`;
+          document.querySelector(".input>#tanggal").value = lengkap;
         });
+       
       document.form.onsubmit = async(e) => {
         e.preventDefault();
         const data = new FormData();

@@ -86,9 +86,10 @@
       fetch(`/api/me`)
         .then((response) => response.json())
         .then((data) => {
-          // console.log(data);
           bio = data;
           document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.querySelector(".profil>img").src = `/photos/${data[0].profil}`;
+
         });
         
        async function suratMasuk() {

@@ -14,23 +14,23 @@
       </div>
       <form action="" name="form">
         <div class="data">
-          <div class="input-data-detail ukuran">
-            Nama Pengirim: <input type="text" name="pengirim" required readonly/>
-          </div>  
-          <hr class="garis" />
-          <div class="input-data-detail ukuran">
-            Tanggal Kirim: <input type="text" name="tanggal_kirim" required readonly />
+          <div class="input-data-detail " id="profil">
+            <img src="" alt="">
           </div>
-          <hr class="garis" />
-          <div class="input-data-detail ukuran">
-            Catatan: <input type="text" name="catatan" required readonly/>
-            <input type="text" name="status" hidden required readonly/>
+          <div class="kotak">
+            <div class="input-data-detail ukuran">
+              Nama Pengirim: <input type="text" name="pengirim" required/>
+            </div>  
+           
+            <div class="input-data-detail ukuran">
+              Tanggal Kirim: <input type="text" name="tanggal_kirim" required />
+            </div>
+           
+            <div class="input-data-detail ukuran">
+              Catatan: <input type="text" name="catatan" required/>
+              <input type="text" name="status" hidden required/>
+            </div>
           </div>
-          <hr />
-          <div class="input-data-detail ukuran">
-            Folder Surat: <input type="text" readonly />
-          </div>
-          <hr class="garis" />
         </div>
         <div class="tombol-bagian-lihat hijau ">
            <a href="../arsip/">Kembali</a>
@@ -54,6 +54,8 @@
           document.form.tanggal_kirim.value = data.tanggal_kirim;
           document.form.catatan.value = data.catatan;
           document.form.status.value = 1;
+          document.querySelector("#profil>img").src = `/photos/${data.surat}`;
+
         });
 
         

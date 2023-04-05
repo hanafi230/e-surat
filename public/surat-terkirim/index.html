@@ -11,47 +11,47 @@
     <div class="layout">
       <header>
         <div class="logo">
-            <h3><a href="/"><img src="../gambar/Logo.png" alt="" /></a></h3>
+          <h3>
+            <a href="/"><img src="../gambar/Logo.png" alt="" /></a>
+          </h3>
         </div>
         <div class="user">
           <div class="profil">
             <img src="../gambar/propil.jpg" alt="" />
           </div>
           <div class="pengguna">
-            <h3>Hanafi </h3>
+            <h3>Hanafi</h3>
           </div>
         </div>
       </header>
       <div class="control">
         <aside>
-            <div class="jarak">
-              <div class="sidebar">
-                <h3><a href="../input/index.html">Surat Baru &nbsp;</a></h3>
-              </div>
-              <hr />
-              <div class="sidebar">
-                <h3>
-                  <a href="../surat-terkirim/index.html">Surat Terkirim </a
-                  >
-                </h3>
-              </div>
-              <hr />
-              <div class="sidebar">
-                <h3>
-                  <a href="../profil-input/index.html">Profile </a
-                  >
-                </h3>
-              </div>
-              <hr />
+          <div class="jarak">
+            <div class="sidebar">
+              <h3><a href="../input">Surat Baru &nbsp;</a></h3>
             </div>
-            <div class="logout">
+            <hr />
+            <div class="sidebar">
               <h3>
-                <a href="../login/index.html"
-                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
-                >
+                <a href="../surat-terkirim">Surat Terkirim </a>
               </h3>
             </div>
-          </aside>
+            <hr />
+            <div class="sidebar">
+              <h3>
+                <a href="../profil-input">Profile </a>
+              </h3>
+            </div>
+            <hr />
+          </div>
+          <div class="logout">
+            <h3>
+              <a href="../login"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+              >
+            </h3>
+          </div>
+        </aside>
         <div class="content">
           <main>
             <div class="isi">
@@ -61,9 +61,8 @@
                   <table>
                     <th>No</th>
                     <th>Pengirim</th>
-                    <th>Tanggal Masuk</th> 
-                    <th>Status</th> 
-
+                    <th>Tanggal Masuk</th>
+                    <th>Status</th>
                   </table>
                 </div>
               </div>
@@ -73,19 +72,31 @@
       </div>
     </div>
     <script>
-      fetch("/api/me").then((res) => res.json());
-      async function suratMasuk(){
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+        });
+      async function suratMasuk() {
         const tabel = document.querySelector("table");
         const res = await fetch("/api/data");
-        const data = await res.json();   
-        data.forEach((e,i) => {
+        const data = await res.json();
+        data.forEach((e, i) => {
           const tr = document.createElement("tr");
           const no = document.createElement("td");
-          no.textContent = i+1;
+          no.textContent = i + 1;
           const nama = document.createElement("td");
           nama.textContent = e.pengirim;
           const tanggal = document.createElement("td");
-          tanggal.textContent = e.tanggal_kirim;
+          tanggal.textContent = new Date(e.tanggal_kirim).toLocaleString(
+            "id-ID",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }
+          );
           const status = document.createElement("td");
           status.textContent = e.keterangan;
 
@@ -94,7 +105,6 @@
           tr.appendChild(tanggal);
           tr.appendChild(status);
           tabel.appendChild(tr);
-
         });
       }
       suratMasuk();

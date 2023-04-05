@@ -14,52 +14,58 @@
       </div>
       <form action="" name="form">
         <div class="data">
-          <div class="input-data-detail ukuran">
-            Nama Pengirim: <input type="text" readonly name="pengirim" />
+          <div class="input-data-detail " id="profil">
+            <img src="" alt="">
           </div>
-          <hr class="garis" />
-          <div class="input-data-detail ukuran">
-            Tanggal Kirim: <input type="text" readonly name="tanggal_kirim" />
+          <div class="kotak">
+            <div class="input-data-detail ukuran">
+              Nama Pengirim: <input type="text" name="pengirim" required/>
+            </div>  
+           
+            <div class="input-data-detail ukuran">
+              Tanggal Kirim: <input type="text" name="tanggal_kirim" required />
+            </div>
+           
+            <div class="input-data-detail ukuran">
+              Catatan: <input type="text" name="catatan" required/>
+              <input type="text" name="status" hidden required/>
+            </div>
           </div>
-          <hr class="garis" />
-          <div class="input-data-detail ukuran">
-            Catatan: <input type="text" readonly name="catatan" />
-            <input type="text" hidden name="status" value="1" />
-          </div>
-          <hr/>
-          <div class="input-data-detail ukuran">
-            Folder Surat: <input type="text" readonly />
-          </div>
-          <hr class="garis" />
+        </div>
+        <div class="tombol-bagian-lihat ">
+           <button>Kembali</button>
         </div>
       </form>
-      <div class="tombol-bagian-lihat hijau">
-        <a href="../surat-masuk/index.html"> Kembali</a>
-      </div>
+      
     </div>
 
     <script>
+     
       const searchParams = new URLSearchParams(location.search);
 
-      fetch(`/api/lihat/${searchParams.get("id")}`, {
+      fetch(`/api/tampil/${searchParams.get("id")}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           document.form.pengirim.value = data.pengirim;
           document.form.tanggal_kirim.value = data.tanggal_kirim;
           document.form.catatan.value = data.catatan;
-          
+          document.form.status.value = 1;
+          document.querySelector("#profil>img").src = `/photos/${data.surat}`;
         });
 
-      document.querySelector("button").onclick = async (e) => {
+        document.querySelector("button").onclick = async (e) => {
         e.preventDefault();
         const pengirim = document.form.pengirim.value;
         const tanggal_kirim = document.form.tanggal_kirim.value;
         const catatan = document.form.catatan.value;
-        
+        const status = document.form.status.value;
+        const profil = document.form.profil.value;
+
         await fetch(`/api/lihat/${searchParams.get("id")}`, {
           method: "PUT",
           headers: {
@@ -70,11 +76,62 @@
             pengirim,
             tanggal_kirim,
             catatan,
-           
-          }),
+            status,
+            profil,
+          })
         });
-        location.href = "../arsip";
+        alert("Ditambahkan Ke Arsip");
+        location.href = "../surat-masuk";
       };
     </script>
   </body>
 </html>
+<!-- 
+  <script>
+      const searchParams = new URLSearchParams(location.search);
+
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {        
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.form.nama.value = data[0].nama;
+          document.form.jenis_kelamin.value = data[0].jenis_kelamin;
+          document.form.alamat.value = data[0].alamat;
+          document.form.nomor_telepon.value = data[0].nomor_telepon;
+          document.form.email.value = data[0].email;
+          document.querySelector(".profil>img").src = `/photos/${data.profil}`;
+
+        });
+
+        document.querySelector("button").onclick = async (e) => {
+            e.preventDefault();
+
+            const foto = new FormData();
+            data.append("nama",document.form.nama.value);
+            data.append("jenis_kelamin",document.form.jenis_kelamin.value);
+            data.append("alamat",document.form.jenis_kelamin.value);
+            data.append("nomor_telepon",document.form.nomor_telepon.value);
+            data.append("email",document.form.email.value);
+            data.append("profil",document.form.profil.files[0]);
+
+          
+
+            await fetch(`/api/ubah`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                nama,
+                jenis_kelamin,
+                alamat,
+                nomor_telepon,
+                email,
+              }),
+            });
+            alert("berhasil diubah");
+            location.href = "../profil";
+          };
+    </script>
+ -->

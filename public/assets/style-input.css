@@ -412,3 +412,13 @@ input{
   background-color: rgba(116, 255, 116, 0.178);
 }
   
+#profil img{
+  padding: 10px;
+  width: 400px;
+  height: 400px;
+  margin-top: -80px;
+}
+
+.data{
+  display: flex;
+}

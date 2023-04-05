@@ -20,7 +20,7 @@
             <img src="../gambar/propil.jpg" alt="" />
           </div>
           <div class="pengguna">
-            <h3 id="nama"></h3>
+            <h3></h3>
           </div>
         </div>
       </header>
@@ -104,7 +104,12 @@
     <script>
       
 
-      fetch("/api/me").then((res) => res.json());
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+        });
 
       async function total() {
         const res = await fetch("/api/arsip");
@@ -143,7 +148,14 @@
           const nama = document.createElement("td");
           nama.textContent = e.pengirim;
           const tanggal = document.createElement("td");
-          tanggal.textContent = e.tanggal_kirim;
+          tanggal.textContent = new Date(e.tanggal_kirim).toLocaleString(
+            "id-ID",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }
+          );
           const catatan = document.createElement("td");
           catatan.textContent = e.catatan;
 

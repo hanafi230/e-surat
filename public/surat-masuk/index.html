@@ -12,9 +12,7 @@
       <header>
         <div class="logo">
           <h3>
-            <a href="/"
-              ><img src="../gambar/Logo.png" alt=""
-            /></a>
+            <a href="/"><img src="../gambar/Logo.png" alt="" /></a>
           </h3>
         </div>
         <div class="user">
@@ -57,7 +55,11 @@
             <hr />
           </div>
           <div class="logout">
-            <h3><a href="/">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
+            <h3>
+              <a href="/"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+              >
+            </h3>
           </div>
         </aside>
         <div class="content">
@@ -70,7 +72,7 @@
                     <th>No</th>
                     <th>Pengirim</th>
                     <th>Tanggal Masuk</th>
-                    <th>Aksi</th>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                    <th>Aksi</th>
                   </table>
                 </div>
               </div>
@@ -80,22 +82,37 @@
       </div>
     </div>
     <script>
-      fetch("/api/me").then((res) => res.json());
-      async function suratMasuk(){
+      let bio ;
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          bio = data;
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+        });
+        
+       async function suratMasuk() {
         const tabel = document.querySelector("table");
         const res = await fetch("/api/surat-masuk");
-        const data = await res.json();   
-        data.forEach((e,i) => {
+        const data = await res.json();
+        data.forEach((e, i) => {
           const tr = document.createElement("tr");
           const no = document.createElement("td");
-          no.textContent = i+1;
+          no.textContent = i + 1;
           const nama = document.createElement("td");
           nama.textContent = e.pengirim;
           const tanggal = document.createElement("td");
-          tanggal.textContent = e.tanggal_kirim;
+          tanggal.textContent = new Date(e.tanggal_kirim).toLocaleString(
+            "id-ID",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }
+          );
           const catatan = document.createElement("td");
           catatan.textContent = e.catatan;
-  
+
           tr.appendChild(no);
           tr.appendChild(nama);
           tr.appendChild(tanggal);
@@ -103,40 +120,14 @@
           tabel.appendChild(tr);
 
           const lihat = document.createElement("td");
-            const anchorEdit = document.createElement("a");
-            anchorEdit.textContent = "Lihat";
-            anchorEdit.href = `../lihat?id=${data[i].id}`;
-            lihat.appendChild(anchorEdit);
-            tr.appendChild(lihat);
-
-  
+          const anchorEdit = document.createElement("a");
+          anchorEdit.textContent = "Lihat";
+          anchorEdit.href = `../lihat?id=${data[i].id}`;
+          lihat.appendChild(anchorEdit);
+          tr.appendChild(lihat);
         });
       }
       suratMasuk();
     </script>
   </body>
-  
 </html>
-<script>
-      document.form.onsubmit = (e) => {
-        e.preventDefault();
-        const pengirim = document.form.pengirim.value;
-        const tanggal_kirim = document.form.tanggal_kirim.value;
-        const catatan = document.form.catatan.value;
-        const status = document.form.status.value;
-        fetch("/api/input", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pengirim,
-            tanggal_kirim,
-            catatan,
-            status
-          }),
-        });
-        alert("Berhasil Ditambahkan");
-        location.href = "../input";
-      };
-    </script>

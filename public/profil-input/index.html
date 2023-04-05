@@ -29,7 +29,7 @@
         <aside>
             <div class="jarak">
               <div class="sidebar">
-                <h3><a href="">Surat Baru &nbsp;</a></h3>
+                <h3><a href="../input/">Surat Baru &nbsp;</a></h3>
               </div>
               <hr />
               <div class="sidebar">
@@ -55,41 +55,95 @@
               </h3>
             </div>
           </aside>
-        <div class="content">
-          <main>
-            <div class="isi">
-              <div class="daftar-surat-box">
-                <h1>Profil Pengguna</h1>
-                <hr>
-                <div class="box-profil">
+          <div class="content">
+            <main>
+              <div class="isi">
+                <div class="daftar-surat-box">
+                  <h1>Profil Pengguna</h1>
+                  <hr />
+                  <div class="box-profil">
                     <div class="foto-tombol">
-                        <div class="foto-profil">
-                            <img src="../gambar/propil.jpg" alt="">
-                        </div>
-                        <div class="tombol-simpan">
-                            <a href="" class="simpan ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Simpan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                        </div>
+                      <div class="foto-profil" id="profil">
+                        <img src="" alt="" />
+                      </div>
+                      <!-- <div class="tombol-simpan">
+                              <a href="" class="simpan ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Simpan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                          </div> -->
                     </div>
                     <div class="keterangan-profil">
+                      <form action="" name="form">
                         <div class="input-data">
-                            Nama Pengguna <input type="text">  
-                            <div class="jk">
-                            Jenis Kelamin 
-                            <input type="radio" name="jenis_kelamin" value="Laki-Laki">Laki-Laki
-                            <input type="radio" name="jenis_kelamin" value="Perempuan">Perempuan
-                            </div>
-                            Alamat <input type="text">  
-                            Nomor Telepon <input type="text">  
-                            Email <input type="text">
-                            Ubah Foto Profil <input type="file">
+                          Nama Pengguna <input type="text" name="nama" />
+                          <div class="jk">
+                            Jenis Kelamin
+                            <input
+                              type="radio"
+                              name="jenis_kelamin"
+                              value="Laki-Laki"
+                            />Laki-Laki
+                            <input
+                              type="radio"
+                              name="jenis_kelamin"
+                              value="Perempuan"
+                            />Perempuan
+                          </div>
+                          Alamat <input type="text" name="alamat" /> Nomor Telepon
+                          <input type="text" name="nomor_telepon" /> Email
+                          <input type="email" id="email" name="email" /> Ubah Foto
+                          Profil <input type="file" name="foto" />
+                          <button>Simpan</button>
                         </div>
+                      </form>
                     </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </main>
-        </div>
+            </main>
+          </div>
       </div>
     </div>
+    <script>
+      const searchParams = new URLSearchParams(location.search);
+
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.form.nama.value = data[0].nama;
+          document.form.jenis_kelamin.value = data[0].jenis_kelamin;
+          document.form.alamat.value = data[0].alamat;
+          document.form.nomor_telepon.value = data[0].nomor_telepon;
+          document.form.email.value = data[0].email;
+          document.querySelector(".profil>img").src = `/photos/${data.profil}`;
+
+        });
+
+        document.querySelector("button").onclick = async (e) => {
+            e.preventDefault();
+            const nama = document.form.nama.value;
+            const jenis_kelamin = document.form.jenis_kelamin.value;
+            const alamat = document.form.alamat.value;
+            const nomor_telepon = document.form.nomor_telepon.value;
+            const email = document.form.email.value;
+
+            await fetch(`/api/ubah`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                nama,
+                jenis_kelamin,
+                alamat,
+                nomor_telepon,
+                email,
+              }),
+            });
+            alert("berhasil diubah");
+            location.href = "../profil";
+          };
+    </script>
   </body>
 </html>

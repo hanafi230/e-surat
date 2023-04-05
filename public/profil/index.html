@@ -12,17 +12,15 @@
       <header>
         <div class="logo">
           <h3>
-            <a href="/"
-              ><img src="../gambar/Logo.png" alt=""
-            /></a>
+            <a href="/"><img src="../gambar/Logo.png" alt="" /></a>
           </h3>
         </div>
         <div class="user">
           <div class="profil">
-            <img src="../gambar/propil.jpg" alt="" />
+            <img src="" alt="" />
           </div>
           <div class="pengguna">
-            <h3>Hanafi</h3>
+            <h3></h3>
           </div>
         </div>
       </header>
@@ -57,7 +55,11 @@
             <hr />
           </div>
           <div class="logout">
-            <h3><a href="../login">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
+            <h3>
+              <a href="../login"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+              >
+            </h3>
           </div>
         </aside>
         <div class="content">
@@ -65,32 +67,41 @@
             <div class="isi">
               <div class="daftar-surat-box">
                 <h1>Profil Pengguna</h1>
-                <hr>
+                <hr />
                 <div class="box-profil">
-                    <div class="foto-tombol">
-                        <div class="foto-profil">
-                            <img src="../gambar/propil.jpg" alt="">
-                        </div>
-                        <div class="tombol-simpan">
+                  <div class="foto-tombol">
+                    <div class="foto-profil" id="profil">
+                      <img src="" alt="" />
+                    </div>
+                    <!-- <div class="tombol-simpan">
                             <a href="" class="simpan ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Simpan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        </div> -->
+                  </div>
+                  <div class="keterangan-profil">
+                    <form action="" name="form">
+                      <div class="input-data">
+                        Nama Pengguna <input type="text" name="nama" />
+                        <div class="jk">
+                          Jenis Kelamin
+                          <input
+                            type="radio"
+                            name="jenis_kelamin"
+                            value="Laki-Laki"
+                          />Laki-Laki
+                          <input
+                            type="radio"
+                            name="jenis_kelamin"
+                            value="Perempuan"
+                          />Perempuan
                         </div>
-                    </div>
-                    <div class="keterangan-profil">
-                        <form action="" name="form">
-                          <div class="input-data">
-                            Nama Pengguna <input type="text" name="nama" id="nama">
-                            <div class="jk">
-                            Jenis Kelamin 
-                            <input type="radio" name="jenis_kelamin" value="Laki-Laki">Laki-Laki
-                            <input type="radio" name="jenis_kelamin" value="Perempuan">Perempuan
-                            </div>
-                            Alamat <input type="text" id="alamat">  
-                            Nomor Telepon <input type="text" id="notel">  
-                            Email <input type="text" id="email">
-                            Ubah Foto Profil <input type="file">
-                          </div>
-                        </form>
-                    </div>
+                        Alamat <input type="text" name="alamat" /> Nomor Telepon
+                        <input type="text" name="nomor_telepon" /> Email
+                        <input type="email" id="email" name="email" /> Ubah Foto
+                        Profil <input type="file" name="foto" />
+                        <button>Simpan</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,19 +109,48 @@
         </div>
       </div>
     </div>
-      <script>
-        async function profil() {
-        const tabel = document.querySelector("form");
-        const res = await fetch("/api/me");
-        const data = await res.json();
+    <script>
+      const searchParams = new URLSearchParams(location.search);
 
-        const nama = document.getElementById("nama");
-        nama.textContent = data.nama;
-        const cetak = document.querySelector("input");
-        cetak.appendChild(nama);
-      
-      }
-      profil();
-      </script>
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.form.nama.value = data[0].nama;
+          document.form.jenis_kelamin.value = data[0].jenis_kelamin;
+          document.form.alamat.value = data[0].alamat;
+          document.form.nomor_telepon.value = data[0].nomor_telepon;
+          document.form.email.value = data[0].email;
+          document.querySelector(".profil>img").src = `/photos/${data.profil}`;
+
+        });
+
+        document.querySelector("button").onclick = async (e) => {
+            e.preventDefault();
+            const nama = document.form.nama.value;
+            const jenis_kelamin = document.form.jenis_kelamin.value;
+            const alamat = document.form.alamat.value;
+            const nomor_telepon = document.form.nomor_telepon.value;
+            const email = document.form.email.value;
+
+            await fetch(`/api/ubah`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                nama,
+                jenis_kelamin,
+                alamat,
+                nomor_telepon,
+                email,
+              }),
+            });
+            alert("berhasil diubah");
+            location.href = "../profil";
+          };
+    </script>
   </body>
 </html>

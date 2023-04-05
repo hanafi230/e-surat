@@ -12,7 +12,7 @@
       <header>
         <div class="logo">
           <h3>
-            <a href="../input/index.html"
+            <a href="../input"
               ><img src="../gambar/Logo.png" alt=""
             /></a>
           </h3>
@@ -30,27 +30,27 @@
         <aside>
           <div class="jarak">
             <div class="sidebar">
-              <h3><a href="../input/index.html">Surat Baru &nbsp;</a></h3>
+              <h3><a href="../input">Surat Baru &nbsp;</a></h3>
             </div>
             <hr />
             <div class="sidebar">
               <h3>
-                <a href="../surat-terkirim/index.html">Surat Terkirim </a
+                <a href="../surat-terkirim">Surat Terkirim </a
                 >
               </h3>
             </div>
             <hr />
             <div class="sidebar">
               <h3>
-                <a href="../profil-input/index.html">Profile </a
+                <a href="../profil-input">Profile </a
                 >
               </h3>
             </div>
             <hr />
-          </div>
+          </div>  
           <div class="logout">
             <h3>
-              <a href="../login/index.html"
+              <a href="../login"
                 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
               >
             </h3>
@@ -73,7 +73,7 @@
                   Catatan <input type="text" name="catatan" required>
                 </div>
                 <div class="input">
-                  Surat <input type="file">
+                  Surat <input type="file" name="surat"> 
                 </div>
                 <div class="input">
                   <input type="hidden" name="status" value="2">
@@ -89,23 +89,22 @@
       </div>
     </div>
     <script>
-      document.form.onsubmit = (e) => {
+       fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+        });
+      document.form.onsubmit = async(e) => {
         e.preventDefault();
-        const pengirim = document.form.pengirim.value;
-        const tanggal_kirim = document.form.tanggal_kirim.value;
-        const catatan = document.form.catatan.value;
-        const status = document.form.status.value;
-        fetch("/api/input", {
+        const data = new FormData();
+        data.append("pengirim",document.form.pengirim.value);
+        data.append("tanggal_kirim",document.form.tanggal_kirim.value);
+        data.append("catatan",document.form.catatan.value);
+        data.append("status",document.form.status.value);
+        data.append("surat",document.form.surat.files[0]);
+       await fetch("/api/input", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            pengirim,
-            tanggal_kirim,
-            catatan,
-            status
-          }),
+          body: data
         });
         alert("Berhasil Ditambahkan");
         location.href = "../input";

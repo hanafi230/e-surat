@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/style-input.css" />
+    <title>Lihat</title>
+  </head>
+  <body>
+    <div class="box-lihat">
+      <div class="text-lihat">
+        <h1>Detail</h1>
+      </div>
+      <form action="" name="form">
+        <div class="data">
+          <div class="input-data-detail ukuran">
+            Nama Pengirim: <input type="text" name="pengirim" required readonly/>
+          </div>  
+          <hr class="garis" />
+          <div class="input-data-detail ukuran">
+            Tanggal Kirim: <input type="text" name="tanggal_kirim" required readonly />
+          </div>
+          <hr class="garis" />
+          <div class="input-data-detail ukuran">
+            Catatan: <input type="text" name="catatan" required readonly/>
+            <input type="text" name="status" hidden required readonly/>
+          </div>
+          <hr />
+          <div class="input-data-detail ukuran">
+            Folder Surat: <input type="text" readonly />
+          </div>
+          <hr class="garis" />
+        </div>
+        <div class="tombol-bagian-lihat hijau ">
+           <a href="../arsip/">Kembali</a>
+        </div>
+      </form>
+      
+    </div>
+
+    <script>
+     
+      const searchParams = new URLSearchParams(location.search);
+
+      fetch(`/api/tampilArsip/${searchParams.get("id")}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.form.pengirim.value = data.pengirim;
+          document.form.tanggal_kirim.value = data.tanggal_kirim;
+          document.form.catatan.value = data.catatan;
+          document.form.status.value = 1;
+        });
+
+        
+    
+    </script>
+  </body>
+</html>

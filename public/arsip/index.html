@@ -73,15 +73,7 @@
                     <th>Pengirim</th>
                     <th>Tanggal Masuk</th>
                     <th>Aksi</th>
-                    <!-- <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>
-                        <a href="" class="tombol hijau lihat">Lihat</a>
-                        <a href="" class="tombol merah hapus">Hapus</a>
-                      </td>
-                    </tr> -->
+                    
                   </table>
                 </div>
               </div>
@@ -91,7 +83,13 @@
       </div>
     </div>
     <script>
-      fetch("/api/me").then((res) => res.json());
+       fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log(data);
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+        });
+        
       async function suratMasuk() {
         const tabel = document.querySelector("table");
         const res = await fetch("/api/arsip");
@@ -105,12 +103,19 @@
           nama.textContent = e.pengirim;
 
           const tanggal = document.createElement("td");
-          tanggal.textContent = e.tanggal_kirim;
+          tanggal.textContent = new Date(e.tanggal_kirim).toLocaleString(
+            "id-ID",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }
+          );
 
           const lihat = document.createElement("td");
           const anchorEdit = document.createElement("a");
           anchorEdit.textContent = "Lihat";
-          anchorEdit.href = `../lihat?id=${data[i].id}`;
+          anchorEdit.href = `../tampil?id=${data[i].id}`;
           lihat.appendChild(anchorEdit);
 
           const tdDelete = document.createElement("td");

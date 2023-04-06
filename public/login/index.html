@@ -54,7 +54,7 @@
           }),
         }).then(async (response) => {
           if (response.ok) {
-            location.href = "/";
+            location.reload();
           } else {
             const message = await response.text();
             alert(message);

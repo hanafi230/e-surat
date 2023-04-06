@@ -1,62 +1,55 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import { client } from "./db.js";
-
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import multer from "multer";
-const upload = multer({ dest: "public/photos" });
+import path from "path";
+import { count } from "console";
+import { unlink } from "fs/promises";
 
+import dotenv from "dotenv";
+import e from "express";
+dotenv.config();
+const upload = multer({ dest: "public/photos" });
 const app = express();
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // Untuk memeriksa otorisasi
-app.use((req, res, next) => {
-  if (req.path.startsWith("/api/login") || req.path.startsWith("/assets")) {
-    next();
-  } else {
-    let authorized = false;
-    if (req.cookies.token) {
-      try {
-        jwt.verify(req.cookies.token, process.env.SECRET_KEY);
-        authorized = true;
-      } catch (err) {
-        res.setHeader("Cache-Control", "no-store"); // khusus Vercel
-        res.clearCookie("token");
-      }
-    }
-    if (authorized) {
-      if (req.path.startsWith("/login")) {
-        res.redirect("/");
-      } else {
-        next();
-      }
-    } else {
-      if (req.path.startsWith("/login")) {
-        next();
-      } else {
-        if (req.path.startsWith("/api")) {
-          res.status(401);
-          res.send("Anda harus login terlebih dahulu.");
-        } else {
-          res.redirect("/login");
-        }
-      }
-    }
-  }
-});
-
-// Untuk mengakses file statis
-// app.use(express.static("public"));
-
-// Untuk mengakses file statis (khusus Vercel)
-// import path from "path";
-
-// const __dirname = path.dirname(new URL(import.meta.url).pathname);
-// app.use(express.static(path.resolve(__dirname, "public")));
+// app.use((req, res, next) => {
+//   if (req.path.startsWith("/api/login") || req.path.startsWith("/assets")) {
+//     next();
+//   } else {
+//     let authorized = false;
+//     if (req.cookies.token) {
+//       try {
+//         jwt.verify(req.cookies.token, process.env.SECRET_KEY);
+//         authorized = true;
+//       } catch (err) {
+//         res.setHeader("Cache-Control", "no-store"); // khusus Vercel
+//         res.clearCookie("token");
+//       }
+//     }
+//     if (authorized) {
+//       if (req.path.startsWith("/login")) {
+//         res.redirect("/");
+//       } else {
+//         next();
+//       }
+//     } else {
+//       if (req.path.startsWith("/login")) {
+//         next();
+//       } else {
+//         if (req.path.startsWith("/api")) {
+//           res.status(401);
+//           res.send("Anda harus login terlebih dahulu.");
+//         } else {
+//           res.redirect("/login");
+//         }
+//       }
+//     }
+//   }
+// });
 
 // Untuk membaca body berformat JSON
 app.use(express.json());
@@ -64,39 +57,28 @@ app.use(express.json());
 // ROUTE OTORISASI
 
 // Login (dapatkan token)
-app.post("/api/login", async (req, res) => {
-  const results = await client.query(
-    `SELECT * FROM pengguna WHERE email = '${req.body.email}'`
-  );
-  if (results.rows.length > 0) {
-    if (await bcrypt.compare(req.body.password, results.rows[0].password)) {
-      const token = jwt.sign(results.rows[0], process.env.SECRET_KEY);
-      res.cookie("token", token);
-      res.send("Login berhasil.");
-    } else {
-      res.status(401);
-      res.send("Kata sandi salah.");
-    }
-  } else {
-    res.status(401);
-    res.send("Mahasiswa tidak ditemukan.");
-  }
-});
-
-// middleware untuk membaca body berformat JSON
-app.use(express.json());
-
-app.use(express.static("public"));
+// app.post("/api/login", async (req, res) => {
+//   const results = await client.query(
+//     `SELECT * FROM pengguna WHERE email = '${req.body.email}'`
+//   );
+//   if (results.rows.length > 0) {
+//     if (await bcrypt.compare(req.body.password, results.rows[0].password)) {
+//       const token = jwt.sign(results.rows[0], process.env.SECRET_KEY);
+//       res.cookie("token", token);
+//       res.send("Login berhasil.");
+//     } else {
+//       res.status(401);
+//       res.send("Kata sandi salah.");
+//     }
+//   } else {
+//     res.status(401);
+//     res.send("Mahasiswa tidak ditemukan.");
+//   }
+// });
 
 const salt = await bcrypt.genSalt();
 const hash = await bcrypt.hash("1234", salt);
-console.log(hash);
-import path from "path";
-import { count } from "console";
-import { unlink } from "fs/promises";
-// console.log(hash);
-// const __dirname = path.dirname(new URL(import.meta.url).pathname);
-// app.use(express.static(path.resolve(__dirname, "public")));
+//  console.log(hash);
 
 app.use(cookieParser());
 
@@ -104,21 +86,27 @@ app.use((req, res, next) => {
   if (req.path.startsWith("/api/login") || req.path.startsWith("/assets")) {
     next();
   } else {
-    let authorized = false;
     if (req.cookies.token) {
       try {
         req.me = jwt.verify(req.cookies.token, process.env.SECRET_KEY);
-        authorized = true;
       } catch (err) {
         res.setHeader("Cache-Control", "no-store"); // khusus Vercel
         res.clearCookie("token");
       }
     }
-    if (authorized) {
-      if (req.path.startsWith("/login")) {
-        res.redirect("/");
+    if (req.me) {
+      if (req.me.peran == 1) {
+        if (req.path.startsWith("/input") || req.path.startsWith("/login")) {
+          res.redirect("/");
+        } else {
+          next();
+        }
       } else {
-        next();
+        if (req.path === "/" || req.path.startsWith("/login")) {
+          res.redirect("/input");
+        } else {
+          next();
+        }
       }
     } else {
       if (req.path.startsWith("/login")) {
@@ -258,10 +246,9 @@ app.delete("/api/hapus/:id", upload.single("surat"), async (req, res) => {
   const results = await client.query(
     `SELECT * FROM arsip_surat WHERE id = '${req.params.id}'`
   );
+
   await unlink(`./public/photos/${results.rows[0].surat}`);
-
   await client.query(`DELETE FROM arsip_surat WHERE id = '${req.params.id}'`);
-
   res.send("Mahasiswa berhasil dihapus.");
 });
 

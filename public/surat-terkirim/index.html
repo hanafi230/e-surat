@@ -46,7 +46,7 @@
           </div>
           <div class="logout">
             <h3>
-              <a href="../login"
+              <a href="/api/logout"
                 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
               >
             </h3>
@@ -99,7 +99,7 @@
             }
           );
           const status = document.createElement("td");
-          status.textContent = e.keterangan;
+          status.textContent = e.status;
 
           tr.appendChild(no);
           tr.appendChild(nama);

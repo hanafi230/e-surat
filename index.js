@@ -11,6 +11,77 @@ import multer from "multer";
 const upload = multer({ dest: "public/photos" });
 
 const app = express();
+app.use(cookieParser());
+
+// Untuk memeriksa otorisasi
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api/login") || req.path.startsWith("/assets")) {
+    next();
+  } else {
+    let authorized = false;
+    if (req.cookies.token) {
+      try {
+        jwt.verify(req.cookies.token, process.env.SECRET_KEY);
+        authorized = true;
+      } catch (err) {
+        res.setHeader("Cache-Control", "no-store"); // khusus Vercel
+        res.clearCookie("token");
+      }
+    }
+    if (authorized) {
+      if (req.path.startsWith("/login")) {
+        res.redirect("/");
+      } else {
+        next();
+      }
+    } else {
+      if (req.path.startsWith("/login")) {
+        next();
+      } else {
+        if (req.path.startsWith("/api")) {
+          res.status(401);
+          res.send("Anda harus login terlebih dahulu.");
+        } else {
+          res.redirect("/login");
+        }
+      }
+    }
+  }
+});
+
+// Untuk mengakses file statis
+// app.use(express.static("public"));
+
+// Untuk mengakses file statis (khusus Vercel)
+// import path from "path";
+
+// const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// app.use(express.static(path.resolve(__dirname, "public")));
+
+// Untuk membaca body berformat JSON
+app.use(express.json());
+
+// ROUTE OTORISASI
+
+// Login (dapatkan token)
+app.post("/api/login", async (req, res) => {
+  const results = await client.query(
+    `SELECT * FROM pengguna WHERE email = '${req.body.email}'`
+  );
+  if (results.rows.length > 0) {
+    if (await bcrypt.compare(req.body.password, results.rows[0].password)) {
+      const token = jwt.sign(results.rows[0], process.env.SECRET_KEY);
+      res.cookie("token", token);
+      res.send("Login berhasil.");
+    } else {
+      res.status(401);
+      res.send("Kata sandi salah.");
+    }
+  } else {
+    res.status(401);
+    res.send("Mahasiswa tidak ditemukan.");
+  }
+});
 
 // middleware untuk membaca body berformat JSON
 app.use(express.json());
@@ -19,12 +90,13 @@ app.use(express.static("public"));
 
 const salt = await bcrypt.genSalt();
 const hash = await bcrypt.hash("1234", salt);
+console.log(hash);
 import path from "path";
 import { count } from "console";
 import { unlink } from "fs/promises";
 // console.log(hash);
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-app.use(express.static(path.resolve(__dirname, "public")));
+// const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// app.use(express.static(path.resolve(__dirname, "public")));
 
 app.use(cookieParser());
 
@@ -85,6 +157,14 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// Logout (hapus token)
+app.get("/api/logout", (_req, res) => {
+  res.setHeader("Cache-Control", "no-store"); // khusus Vercel
+  res.clearCookie("token");
+  res.redirect("../login");
+  res.send("Logout berhasil.");
+});
+
 // dapatkan username yang login //////////////////////////////////////////////////////////////////
 app.get("/api/me", async (req, res) => {
   const result = await client.query(
@@ -141,10 +221,16 @@ app.put("/api/ubah", upload.single("profil"), async (req, res) => {
     const result = await client.query(
       `SELECT profil FROM pengguna WHERE id = ${req.me.id}`
     );
-    await unlink(`./public/photos/${result.rows[0].profil}`)
+    await unlink(`./public/photos/${result.rows[0].profil}`);
   }
   await client.query(
-    `UPDATE pengguna SET nama = '${req.body.nama}', jenis_kelamin = '${req.body.jenis_kelamin}', alamat = '${req.body.alamat}', nomor_telepon = '${req.body.nomor_telepon}', email = '${req.body.email}'${req.file ? `, profil = '${req.file.filename}'` : ""} WHERE id = ${req.me.id}`
+    `UPDATE pengguna SET nama = '${req.body.nama}', jenis_kelamin = '${
+      req.body.jenis_kelamin
+    }', alamat = '${req.body.alamat}', nomor_telepon = '${
+      req.body.nomor_telepon
+    }', email = '${req.body.email}'${
+      req.file ? `, profil = '${req.file.filename}'` : ""
+    } WHERE id = ${req.me.id}`
   );
   res.send("Berhasil diedit.");
 });
@@ -173,14 +259,11 @@ app.delete("/api/hapus/:id", upload.single("surat"), async (req, res) => {
     `SELECT * FROM arsip_surat WHERE id = '${req.params.id}'`
   );
   await unlink(`./public/photos/${results.rows[0].surat}`);
-  
 
   await client.query(`DELETE FROM arsip_surat WHERE id = '${req.params.id}'`);
-  
+
   res.send("Mahasiswa berhasil dihapus.");
 });
- 
-
 
 app.listen(3000, () => {
   console.log("Server berhasil berjalan.");

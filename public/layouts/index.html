@@ -4,46 +4,62 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../style.css" />
-    <title>Layouts</title>
+    <link rel="stylesheet" href="../assets/style.css" />
+    <title>Home</title>
   </head>
   <body>
     <div class="layout">
       <header>
         <div class="logo">
-            <h3><a href="/"><img src="../gambar/Logo.png" alt="" /></a></h3>
+          <h3>
+            <a href="/"><img src="../gambar/Logo.png" alt="" /></a>
+          </h3>
         </div>
         <div class="user">
           <div class="profil">
             <img src="../gambar/propil.jpg" alt="" />
           </div>
           <div class="pengguna">
-            <h3>Hanafi </h3>
+            <h3></h3>
           </div>
         </div>
       </header>
       <div class="control">
         <aside>
           <div class="jarak">
-            <div class="sidebar">
-              <h3><a href="../home/index.html">Home &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>             
+            <div class="sidebar active">
+              <h3>
+                <a href="../layouts/"
+                  > &nbsp;&nbsp;&nbsp;Home
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+                >
+              </h3>
             </div>
-            <hr>
+            <hr />
             <div class="sidebar">
-              <h3><a href="../surat-masuk/index.html">Surat Masuk</a></h3>
+              <h3><a href="../surat-masuk">Surat Masuk</a></h3>
             </div>
-            <hr>
+            <hr />
             <div class="sidebar">
-              <h3><a href="">Arsip Surat &nbsp;</a></h3>
+              <h3><a href="../arsip">Arsip Surat &nbsp;</a></h3>
             </div>
-            <hr>
+            <hr />
             <div class="sidebar">
-              <h3><a href="../profil/index.html">Profile &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
+              <h3>
+                <a href="../profil"
+                  >Profile
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+                >
+              </h3>
             </div>
-            <hr>
+            <hr />
           </div>
           <div class="logout">
-            <h3><a href="../login/index.html">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h3>
+            <h3>
+              <a href="/api/logout"
+                >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Logout&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a
+              >
+            </h3>
           </div>
         </aside>
         <div class="content">
@@ -59,14 +75,14 @@
               </div>
               <div class="box">
                 <div class="card-arsip-jumlah">
-                  <h1>10</h1>
-                  <a href="" class="total">Lihat Detail >></a>
+                  <h1 id="arsip-total"></h1>
+                  <a href="../arsip" class="total">Lihat Detail >></a>
                 </div>
 
                 <div class="card-masuk-jumlah">
-                  <h1>10</h1>
+                  <h2 id="total" name=""></h2>
                   <a href=""></a>
-                  <a href="../surat-masuk/index.html" class="total">Lihat Detail >></a>
+                  <a href="../surat-masuk" class="total">Lihat Detail >></a>
                 </div>
               </div>
               <div class="daftar-surat">
@@ -76,55 +92,7 @@
                     <th>No</th>
                     <th>Pengirim</th>
                     <th>Tanggal Masuk</th>
-                    <th>Aksi</th>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
-                    <tr>
-                      <td>1</td>
-                      <td>Hanafi</td>
-                      <td>19 April 2023</td>
-                      <td>Lihat</td>
-                    </tr>
+                    <th>Catatan</th>
                   </table>
                 </div>
               </div>
@@ -133,5 +101,73 @@
         </div>
       </div>
     </div>
+    <script>
+      
+
+      fetch(`/api/me`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector(".pengguna>h3").textContent = data[0].nama;
+          document.querySelector(".profil>img").src = `/photos/${data[0].profil}`;
+
+        });
+
+      async function total() {
+        const res = await fetch("/api/arsip");
+        const data = await res.json();
+        const total = data.length;
+        const jumlahTotalSurat = document.createElement("arsip");
+        jumlahTotalSurat.textContent = total;
+        const cetak = document.querySelector("h1");
+        cetak.appendChild(jumlahTotalSurat);
+      }
+      total();
+
+      async function jumlahSurat() {
+        const res = await fetch("/api/surat-masuk");
+        const data = await res.json();
+        const jumlahTotal = data.length;
+        const TotalSurat = document.createElement("total");
+        TotalSurat.textContent = jumlahTotal;
+        const cetak = document.querySelector("h2");
+        cetak.appendChild(TotalSurat);
+      }
+      jumlahSurat();
+    
+      async function suratMasuk() {
+        const tabel = document.querySelector("table");
+        const res = await fetch("/api/surat-masuk");
+        const data = await res.json();
+
+        
+
+        data.forEach((e, i) => {
+          const tr = document.createElement("tr");
+          const no = document.createElement("td");
+          no.textContent = i + 1;
+          
+          const nama = document.createElement("td");
+          nama.textContent = e.pengirim;
+          const tanggal = document.createElement("td");
+          tanggal.textContent = new Date(e.tanggal_kirim).toLocaleString(
+            "id-ID",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "2-digit",
+            }
+          );
+          const catatan = document.createElement("td");
+          catatan.textContent = e.catatan;
+
+          tr.appendChild(no);
+          tr.appendChild(nama);
+          tr.appendChild(tanggal);
+          tr.appendChild(catatan);
+          tabel.appendChild(tr);
+        });
+      }
+      suratMasuk();
+    </script>
   </body>
 </html>

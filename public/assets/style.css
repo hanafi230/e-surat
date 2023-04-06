@@ -91,7 +91,7 @@ hr {
   padding: 19px;
 }
 .sidebar:hover {
-  background-color: rgba(255, 212, 179, 0.55);
+  /* background-color: rgba(255, 212, 179, 0.55); */
   justify-content: center;
 }
 .content {
@@ -396,4 +396,10 @@ main {
 
   #arsip-total{
     font-size: 28px;
+  }
+
+  .active{
+    background-color: rgba(255, 212, 179, 0.55);
+    justify-content: center;
+
   }
